@@ -68,7 +68,37 @@ classDiagram
     SubmissionCore "1" -- "0..*" Lesson : possui lições atribuídas
 ```
 
-### 2. Fluxo de Operação (Sequência)
+### 2. Diagrama de Contexto (C4)
+
+O diagrama abaixo descreve as fronteiras do sistema e como ele interage com usuários e serviços externos.
+
+```mermaid
+graph TD
+    subgraph "Ecossistema Daora Kids"
+        System["DK Forms (Aplicação)"]
+    end
+
+    User["Voluntário (Pais)"]
+    Admin["Administrador (Equipe)"]
+
+    CS["ClickSign API (Assinatura Digital)"]
+    CF["Cloudflare Turnstile (Captcha)"]
+    AB["AbuseIPDB (Anti-Fraude)"]
+    Mail["Servidor de E-mail (SMTP)"]
+
+    User -- "Preenche candidatura e valida e-mail" --> System
+    User -- "Assina termos de voluntariado" --> CS
+    Admin -- "Gerencia funil e atribui lições" --> System
+
+    System -- "Envia templates de contrato" --> CS
+    System -- "Valida tokens de segurança" --> CF
+    System -- "Verifica reputação de IP" --> AB
+    System -- "Dispara notificações automáticas" --> Mail
+    
+    CS -- "Notifica status de assinatura" --> System
+```
+
+### 3. Fluxo de Operação (Sequência)
 
 O diagrama abaixo ilustra a interação entre o Voluntário, a SPA em React, o Backend PHP e as APIs externas.
 
