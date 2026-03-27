@@ -76,26 +76,28 @@ O diagrama abaixo descreve as fronteiras do sistema e como ele interage com usu�
 C4Context
     title Diagrama de Contexto - DK Forms
 
-    Person(user, "Voluntário (Pais)", "Interessa-se pelo projeto, preenche a candidatura e assina o termo legal.")
-    Person(admin, "Administrador", "Equipe interna que realiza triagem, aprova candidatos e atribui lições.")
+    Person(user, "Voluntário (Pais)", "Interessa-se pelo projeto, preenche a candidatura e assina termos.")
+    Person(admin, "Administrador", "Equipe interna que realiza triagem e atribui lições.")
 
     System(system, "DK Forms", "Plataforma de gestão de voluntariado (React + PHP).")
 
-    System_Ext(clicksign, "ClickSign API", "Serviço de assinatura digital para formalização jurídica.")
-    System_Ext(cloudflare, "Cloudflare Turnstile", "Proteção contra bots e submissões automatizadas.")
-    System_Ext(abuseipdb, "AbuseIPDB", "Verificação de reputação de IP e prevenção de fraudes.")
-    System_Ext(smtp, "Servidor SMTP", "Serviço de disparo de e-mails transacionais.")
+    Boundary(ext, "Serviços Externos", "Integrações de nuvem e segurança") {
+        System_Ext(clicksign, "ClickSign API", "Assinatura digital.")
+        System_Ext(cloudflare, "Cloudflare Turnstile", "Proteção contra bots.")
+        System_Ext(abuseipdb, "AbuseIPDB", "Prevenção de fraudes.")
+        System_Ext(smtp, "Servidor SMTP", "E-mails transacionais.")
+    }
 
-    Rel(user, system, "Preenche candidatura e valida e-mail", "HTTPS")
-    Rel(user, clicksign, "Assina termo de voluntariado", "E-mail/HTTPS")
-    Rel(admin, system, "Gerencia funil e produção", "HTTPS")
+    Rel(user, system, "Preenche candidatura", "HTTPS")
+    Rel(user, clicksign, "Assina termo", "E-mail/HTTPS")
+    Rel(admin, system, "Gerencia funil", "HTTPS")
 
-    Rel(system, clicksign, "Dispara templates de contrato", "REST API v3")
-    Rel(system, cloudflare, "Valida tokens de segurança", "HTTPS")
-    Rel(system, abuseipdb, "Verifica score de abuso", "HTTPS")
+    Rel(system, clicksign, "Dispara contratos", "REST API v3")
+    Rel(system, cloudflare, "Valida segurança", "HTTPS")
+    Rel(system, abuseipdb, "Verifica score", "HTTPS")
     Rel(system, smtp, "Envia notificações", "SMTP")
     
-    Rel(clicksign, system, "Notifica eventos de assinatura", "Webhook")
+    Rel(clicksign, system, "Notifica eventos", "Webhook")
 ```
 
 ### 3. Fluxo de Operação (Sequência)
