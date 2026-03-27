@@ -83,11 +83,14 @@ C4Context
 
     System(system, "DK Forms", "Plataforma de gestão de voluntariado (React + PHP).")
 
-    Boundary(ext, "Serviços Externos", "Integrações de nuvem e segurança") {
+    Boundary(ext, "Serviços Integração", "Integrações de nuvem e segurança") {
         System_Ext(clicksign, "ClickSign API", "Assinatura digital.")
+        System_Ext(smtp, "Servidor SMTP", "E-mails transacionais.")
+    }
+
+    Boundary(ext, "Serviços Segurança", "Integrações de nuvem e segurança") {
         System_Ext(cloudflare, "Cloudflare Turnstile", "Proteção contra bots.")
         System_Ext(abuseipdb, "AbuseIPDB", "Prevenção de fraudes.")
-        System_Ext(smtp, "Servidor SMTP", "E-mails transacionais.")
     }
 
     Rel(user, system, "Envia candidatura", "HTTPS")
