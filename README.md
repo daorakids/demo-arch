@@ -75,6 +75,8 @@ O diagrama abaixo descreve as fronteiras do sistema e como ele interage com usu�
 ```mermaid
 C4Context
     title Diagrama de Contexto - DK Forms
+    
+    UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
 
     Person(user, "Voluntário (Pais)", "Interessa-se pelo projeto, preenche a candidatura e assina termos.")
     Person(admin, "Administrador", "Equipe interna que realiza triagem e atribui lições.")
@@ -88,16 +90,17 @@ C4Context
         System_Ext(smtp, "Servidor SMTP", "E-mails transacionais.")
     }
 
-    Rel(user, system, "Preenche candidatura", "HTTPS")
-    Rel(user, clicksign, "Assina termo", "E-mail/HTTPS")
+    Rel(user, system, "Envia candidatura", "HTTPS")
     Rel(admin, system, "Gerencia funil", "HTTPS")
-
-    Rel(system, clicksign, "Dispara contratos", "REST API v3")
-    Rel(system, cloudflare, "Valida segurança", "HTTPS")
-    Rel(system, abuseipdb, "Verifica score", "HTTPS")
-    Rel(system, smtp, "Envia notificações", "SMTP")
     
-    Rel(clicksign, system, "Notifica eventos", "Webhook")
+    Rel_D(user, clicksign, "Assina termo", "E-mail/HTTPS")
+
+    Rel_D(system, clicksign, "Dispara contratos", "REST API v3")
+    Rel_D(system, cloudflare, "Valida segurança", "HTTPS")
+    Rel_D(system, abuseipdb, "Verifica score", "HTTPS")
+    Rel_D(system, smtp, "Envia notificações", "SMTP")
+    
+    Rel_R(clicksign, system, "Notifica eventos", "Webhook")
 ```
 
 ### 3. Fluxo de Operação (Sequência)
