@@ -73,29 +73,29 @@ classDiagram
 O diagrama abaixo descreve as fronteiras do sistema e como ele interage com usuários e serviços externos.
 
 ```mermaid
-graph TD
-    subgraph "Ecossistema Daora Kids"
-        System["DK Forms (Aplicação)"]
-    end
+C4Context
+    title Diagrama de Contexto - DK Forms
 
-    User["Voluntário (Pais)"]
-    Admin["Administrador (Equipe)"]
+    Person(user, "Voluntário (Pais)", "Interessa-se pelo projeto, preenche a candidatura e assina o termo legal.")
+    Person(admin, "Administrador", "Equipe interna que realiza triagem, aprova candidatos e atribui lições.")
 
-    CS["ClickSign API (Assinatura Digital)"]
-    CF["Cloudflare Turnstile (Captcha)"]
-    AB["AbuseIPDB (Anti-Fraude)"]
-    Mail["Servidor de E-mail (SMTP)"]
+    System(system, "DK Forms", "Plataforma de gestão de voluntariado (React + PHP).")
 
-    User -- "Preenche candidatura e valida e-mail" --> System
-    User -- "Assina termos de voluntariado" --> CS
-    Admin -- "Gerencia funil e atribui lições" --> System
+    System_Ext(clicksign, "ClickSign API", "Serviço de assinatura digital para formalização jurídica.")
+    System_Ext(cloudflare, "Cloudflare Turnstile", "Proteção contra bots e submissões automatizadas.")
+    System_Ext(abuseipdb, "AbuseIPDB", "Verificação de reputação de IP e prevenção de fraudes.")
+    System_Ext(smtp, "Servidor SMTP", "Serviço de disparo de e-mails transacionais.")
 
-    System -- "Envia templates de contrato" --> CS
-    System -- "Valida tokens de segurança" --> CF
-    System -- "Verifica reputação de IP" --> AB
-    System -- "Dispara notificações automáticas" --> Mail
+    Rel(user, system, "Preenche candidatura e valida e-mail", "HTTPS")
+    Rel(user, clicksign, "Assina termo de voluntariado", "E-mail/HTTPS")
+    Rel(admin, system, "Gerencia funil e produção", "HTTPS")
+
+    Rel(system, clicksign, "Dispara templates de contrato", "REST API v3")
+    Rel(system, cloudflare, "Valida tokens de segurança", "HTTPS")
+    Rel(system, abuseipdb, "Verifica score de abuso", "HTTPS")
+    Rel(system, smtp, "Envia notificações", "SMTP")
     
-    CS -- "Notifica status de assinatura" --> System
+    Rel(clicksign, system, "Notifica eventos de assinatura", "Webhook")
 ```
 
 ### 3. Fluxo de Operação (Sequência)
